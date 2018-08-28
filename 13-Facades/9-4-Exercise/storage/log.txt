@@ -1,0 +1,5 @@
+(2018-08-24 23:52:31)Silence shoot a fire arrow at Ramm
+(2018-08-24 23:52:31)Ramm now it 10 points of life
+(2018-08-24 23:52:31)Silence shoot a fire arrow at Ramm
+(2018-08-24 23:52:31)Ramm now it -20 points of life
+(2018-08-24 23:52:31)Ramm muere
