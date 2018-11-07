@@ -4,12 +4,8 @@ namespace Styde;
 
 require "../vendor/autoload.php";
 
-//$node = (new HtmlNode('textarea', 'Styde'))->name('content');
-//
-//echo $node->render();
 
-
-$node = HtmlNode::textarea('Contenido abrumador')
+$node = HtmlNode::textarea('styde','class','form-control')
 	->name('content')
 	->id('contenido');
 

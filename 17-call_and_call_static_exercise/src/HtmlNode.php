@@ -1,71 +1,62 @@
 <?php
 
-
 namespace Styde;
-
 
 class HtmlNode
 {
+    protected $tag;
+    protected $content;
+    protected $attributes = [];
 
-	protected $tag;
-	protected $content;
-	protected $attributes = [];
-
-	public function __construct($tag, $content = null, $attributes = [])
-	{
-		$this->tag = $tag;
-		$this->content = $content;
-		$this->attributes = $attributes;
-	}
-
-	public static function __callStatic($method, $args = [])
-	{
-		return new HtmlNode($method,static::isArgument($args[0]));
-	}
+    public function __construct($tag, $content = null, $attributes = [])
+    {
+        $this->tag = $tag;
+        $this->content = $content;
+        $this->attributes = $attributes;
+    }
 
 
-	public function __call($method, array $args = [])
-	{
-		if (isset($args[0])) {
-			$this->attributes[$method] = $args[0];
-		}
+    public static function __callStatic($method, array $args)
+    {
 
-		return $this;
-	}
+        $content = $args[0] ?? null;
+        $attribute = $args[1] ?? null;
+        $valueAttr = $args[2] ?? null;
+        return new HtmlNode($method, $content, [$attribute => $valueAttr]);
+    }
 
+    public function __call($method, array $args = [])
+    {
+        $this->validateArgs($method, $args[0]);
+        $this->attributes[$method] = $args[0];
+        return $this;
+    }
 
-	public static function isArgument($args){
-		if(isset($args)){
-			return $args;
-		}
-	}
+    public function validateArgs($method, $args)
+    {
+        if (!isset($args)) {
+            throw new \Exception("You forgot to pass the value to the attribute $method");
+        }
 
-	public function render()
-	{
-		$result = "<{$this->tag} {$this->renderAttributes()}>";
-		return $this->isThereContent($this->content,$result);
+    }
 
-	}
+    public function render()
+    {
+        $result = "<{$this->tag} {$this->renderAttributes()}>";
+        if ($this->content != null) {
+            $result .= $this->content;
+        }
 
-	public function isThereContent($content,$result)
-	{
-		if ($content != null) {
-			return $result .= $this->content . "</{$this->tag}>";
-		}
+        return $result .= "</{$this->tag}>";
+    }
 
-	}
+    protected function renderAttributes()
+    {
+        $result = "";
+        foreach ($this->attributes as $name => $value) {
+            $result .= sprintf(' %s="%s"', $name, $value);
+        }
 
-
-	protected function renderAttributes()
-	{
-		$result = "";
-
-		foreach ($this->attributes as $name => $value) {
-			$result .= sprintf(' %s="%s"', $name, $value);
-
-		}
-
-		return $result;
-	}
-
+        return $result;
+    }
 }
